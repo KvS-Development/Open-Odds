@@ -2,162 +2,156 @@
 
 Open-Odds.com - A visual probability distribution calculator for complex scenarios
 
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18.17 or later
+- npm or yarn
+- A [Supabase](https://supabase.com) account (free)
+- A [Vercel](https://vercel.com) account (free) for deployment
+
+### Quick Setup
+
+1. **Clone the repository and install dependencies:**
+
+```bash
+git clone https://github.com/KvS-Development/Open-Odds.git
+cd Open-Odds
+npm install
+```
+
+2. **Create a Supabase project:**
+
+- Go to [database.new](https://database.new)
+- Create a new project
+- Wait for it to finish setting up
+- Go to Settings → API
+- Copy your `Project URL` and `anon public` key
+
+3. **Set up environment variables:**
+
+```bash
+cp .env.example .env.local
+```
+
+Edit `.env.local` and add your Supabase credentials:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+4. **Run the development server:**
+
+```bash
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to see the app.
+
+## 📦 Deployment to Vercel
+
+### Option 1: Deploy with Vercel CLI
+
+```bash
+npm i -g vercel
+vercel
+```
+
+Follow the prompts and add your environment variables when asked.
+
+### Option 2: Deploy via Vercel Dashboard
+
+1. Push your code to GitHub
+2. Go to [vercel.com/new](https://vercel.com/new)
+3. Import your GitHub repository
+4. Add environment variables:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+5. Click "Deploy"
+
+## 🏗️ Project Structure
+
+```
+Open-Odds/
+├── app/              # Next.js App Router pages
+│   ├── auth/        # Authentication pages
+│   ├── layout.tsx   # Root layout with navigation
+│   └── page.tsx     # Home page
+├── components/      # React components
+│   ├── ui/         # Reusable UI components
+│   └── *.tsx       # Feature components
+├── lib/            # Utilities and configurations
+│   ├── supabase/   # Supabase client setup
+│   └── utils.ts    # Helper functions
+└── public/         # Static assets
+```
+
+## 🔑 Features
+
+### Current
+- ✅ Next.js 15 with App Router
+- ✅ Supabase authentication (email/password)
+- ✅ TypeScript
+- ✅ Tailwind CSS with dark mode
+- ✅ Responsive design
+
+### Coming Soon
+- 🔄 Scenario builder
+- 🔄 Distribution visualizations with Chart.js
+- 🔄 Probability calculations
+- 🔄 Save and share scenarios
+- 🔄 Community features
+
+## 🛠️ Tech Stack
+
+- **Framework:** [Next.js](https://nextjs.org/)
+- **Database:** [Supabase](https://supabase.com/)
+- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
+- **Deployment:** [Vercel](https://vercel.com/)
+- **Visualizations:** [Chart.js](https://www.chartjs.org/) (coming soon)
+
+## 📝 Development
+
+### Available Scripts
+
+```bash
+npm run dev      # Start development server
+npm run build    # Build for production
+npm run start    # Start production server
+npm run lint     # Run ESLint
+```
+
+### Setting up Supabase Tables
+
+After creating your Supabase project, you'll need to set up the database schema. Go to the SQL Editor in your Supabase dashboard and run the SQL commands that will be provided in the next phase of development.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+[License to be determined]
+
+---
+
 ## Project Overview
 
 Open-Odds is a web application that provides visual feedback for probability calculations based on component distributions. Users can build scenarios with multiple steps, input probability distributions for each component, and see visual representations of both individual distributions and their convolutions.
 
 The canonical use case is implementing the Drake equation, where users can specify distributions for each parameter and visualize the resulting probability distribution for the number of communicating civilizations in our galaxy.
 
-## Core Features
+### Core Features (Planned)
 
-### 1. Scenario Building
-- **Component-Based Scenarios**: Users can create scenarios consisting of multiple components/steps
-- **Branching Logic**: Support for scenarios with multiple branching paths
-- **Visual Feedback**: Real-time visual representation of distributions at each step
-- **Convolution Results**: Automatic calculation and visualization of combined probability distributions
-
-### 2. Distribution Input
-- **Multiple Distribution Types**: Support for various probability distributions (normal, uniform, exponential, etc.)
-- **Custom Distributions**: Allow users to define custom probability distributions
-- **Parameter Adjustment**: Interactive controls for adjusting distribution parameters
-- **Visual Preview**: Live preview of each distribution as parameters are adjusted
-
-### 3. Documentation & Evidence
-- **Step Notes**: Users can add notes to each step explaining their reasoning
-- **Evidence Links**: Support for linking to papers, articles, or other sources
-- **Rationale Documentation**: Structured way to document the thinking behind each distribution choice
-
-### 4. Collaboration Features
-- **Public Publishing**: Users can publish their scenarios for public viewing
-- **Copying & Modification**: Ability to copy existing scenarios and modify them
-- **Version History**: Track changes to scenarios over time
-- **Comments**: Comment system for individual steps and complete scenarios
-- **Voting**: Up/down voting for comments and scenarios
-
-### 5. Aggregation & Statistics
-- **Scenario Aggregation**: Automatic grouping of scenarios with identical steps but different distributions
-- **Statistical Summaries**:
-  - Average expectation
-  - Median expectation
-  - Minimum and maximum values
-  - 50th percentile range (centered on median)
-  - 90th percentile range (centered on median)
-- **Comparison Views**: Compare different approaches to the same problem
-
-### 6. User Management
-- **Anonymous Mode**: Fill out and compute scenarios client-side without signing in
-- **Authenticated Features**: Sign-in required for:
-  - Saving scenarios
-  - Publishing scenarios
-  - Commenting
-  - Voting
-- **User Profiles**: Track user's scenarios and contributions
-
-## Technical Requirements
-
-### Frontend
-- **Client-Side Computation**: Ability to calculate results without server interaction
-- **Responsive Design**: Work across desktop and mobile devices
-- **Interactive Visualizations**: Real-time updates as users adjust parameters
-- **Progressive Enhancement**: Core functionality works without JavaScript, enhanced with JS
-
-### Backend
-- **User Authentication**: Secure user registration and login system
-- **Data Persistence**: Store scenarios, comments, votes, and user data
-- **Version Control**: Track and manage scenario versions
-- **API Design**: RESTful API for all operations
-
-### Data Model
-- **Scenarios**: Complex nested structure supporting branching
-- **Distributions**: Flexible schema for various distribution types
-- **Versioning**: Maintain history of changes
-- **Relationships**: Link scenarios, comments, users, and votes
-
-## User Experience Flow
-
-### Anonymous User
-1. Land on homepage
-2. Browse public scenarios or create new
-3. Input distributions for each step
-4. View results and visualizations
-5. Prompted to sign in to save
-
-### Authenticated User
-1. Sign in to account
-2. Create/edit personal scenarios
-3. Publish scenarios publicly
-4. Comment and vote on others' scenarios
-5. Track scenario performance and engagement
-
-## Notification System
-- **Structural Changes Alert**: Notify users when scenario structure changes affect aggregation
-- **Comment Notifications**: Alert when scenarios receive comments
-- **Version Update Alerts**: Notify followers of scenario updates
-
-## Development Phases
-
-### Phase 1: Core Functionality
-- Basic scenario creation
-- Distribution input and visualization
-- Client-side calculation engine
-
-### Phase 2: User System
-- Authentication and user management
-- Scenario saving and loading
-- Basic version control
-
-### Phase 3: Collaboration
-- Publishing system
-- Copying and modification
-- Comments and voting
-
-### Phase 4: Advanced Features
-- Branching scenarios
-- Aggregation and statistics
-- Advanced visualization options
-
-### Phase 5: Polish & Scale
-- Performance optimization
-- Mobile optimization
-- Advanced analytics
-
-## Technology Stack (To Be Determined)
-
-### Frontend Options
-- React/Vue/Angular for UI framework
-- D3.js or Chart.js for visualizations
-- TypeScript for type safety
-
-### Backend Options
-- Node.js/Python/Go for server
-- PostgreSQL/MongoDB for database
-- Redis for caching
-
-### Infrastructure
-- Cloud hosting (AWS/GCP/Azure)
-- CDN for static assets
-- CI/CD pipeline
-
-## Success Metrics
-- User engagement (scenarios created, published)
-- Collaboration metrics (comments, votes, copies)
-- Scenario quality (completeness, documentation)
-- Performance metrics (load time, calculation speed)
-
-## Constraints & Considerations
-- **Privacy**: User data protection and GDPR compliance
-- **Performance**: Handle complex calculations efficiently
-- **Scalability**: Design for growth in users and data
-- **Accessibility**: WCAG compliance for all users
-- **Security**: Protect against common web vulnerabilities
-
-## Next Steps
-1. Define detailed technical architecture
-2. Create wireframes and mockups
-3. Set up development environment
-4. Implement Phase 1 core functionality
-5. Establish testing framework
+1. **Scenario Building** - Create multi-step scenarios with branching logic
+2. **Distribution Input** - Support for various probability distributions
+3. **Visualizations** - Real-time Chart.js visualizations
+4. **Calculations** - Client-side probability calculations
+5. **Collaboration** - Save, share, and discuss scenarios
+6. **Authentication** - User accounts with Supabase Auth
 
 ---
 
-*This document will be updated as the project evolves and requirements are refined.*
+*This project is actively under development. Check back for updates!*
