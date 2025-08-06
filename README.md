@@ -2,6 +2,31 @@
 
 Open-Odds.com - A visual probability distribution calculator for complex scenarios
 
+## 🚀 Quick Start
+
+See [GETTING_STARTED.md](./GETTING_STARTED.md) for detailed setup instructions.
+
+```bash
+# Clone the repository
+git clone https://github.com/KvS-Development/Open-Odds.git
+cd Open-Odds
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your Supabase credentials
+
+# Start development server
+npm run dev
+```
+
+## 📚 Documentation
+
+- [Getting Started Guide](./GETTING_STARTED.md) - Complete setup instructions
+- [Technical Architecture](./TECHNICAL_ARCHITECTURE.md) - System design and tech stack
+
 ## Project Overview
 
 Open-Odds is a web application that provides visual feedback for probability calculations based on component distributions. Users can build scenarios with multiple steps, input probability distributions for each component, and see visual representations of both individual distributions and their convolutions.
@@ -53,25 +78,25 @@ The canonical use case is implementing the Drake equation, where users can speci
   - Voting
 - **User Profiles**: Track user's scenarios and contributions
 
-## Technical Requirements
+## Technology Stack
 
-### Frontend
-- **Client-Side Computation**: Ability to calculate results without server interaction
-- **Responsive Design**: Work across desktop and mobile devices
-- **Interactive Visualizations**: Real-time updates as users adjust parameters
-- **Progressive Enhancement**: Core functionality works without JavaScript, enhanced with JS
+- **Frontend**: React 18, TypeScript, Tailwind CSS, Chart.js
+- **Backend**: Supabase (PostgreSQL, Auth, Realtime)
+- **Deployment**: Vercel
+- **Build Tool**: Vite
+- **State Management**: Zustand, React Query
+- **Testing**: Jest, React Testing Library
 
-### Backend
-- **User Authentication**: Secure user registration and login system
-- **Data Persistence**: Store scenarios, comments, votes, and user data
-- **Version Control**: Track and manage scenario versions
-- **API Design**: RESTful API for all operations
+## Development Scripts
 
-### Data Model
-- **Scenarios**: Complex nested structure supporting branching
-- **Distributions**: Flexible schema for various distribution types
-- **Versioning**: Maintain history of changes
-- **Relationships**: Link scenarios, comments, users, and votes
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run test         # Run tests
+npm run lint         # Run ESLint
+npm run format       # Format code with Prettier
+```
 
 ## User Experience Flow
 
@@ -89,54 +114,34 @@ The canonical use case is implementing the Drake equation, where users can speci
 4. Comment and vote on others' scenarios
 5. Track scenario performance and engagement
 
-## Notification System
-- **Structural Changes Alert**: Notify users when scenario structure changes affect aggregation
-- **Comment Notifications**: Alert when scenarios receive comments
-- **Version Update Alerts**: Notify followers of scenario updates
-
 ## Development Phases
 
-### Phase 1: Core Functionality
-- Basic scenario creation
-- Distribution input and visualization
-- Client-side calculation engine
+### Phase 1: Core Functionality ✅
+- [x] Basic React app structure
+- [x] Supabase integration setup
+- [x] Project configuration
+- [ ] Simple scenario creation
+- [ ] Distribution input UI
+- [ ] Chart.js visualization
+- [ ] Client-side calculations
 
 ### Phase 2: User System
-- Authentication and user management
-- Scenario saving and loading
-- Basic version control
+- [ ] Supabase Auth integration
+- [ ] User profiles
+- [ ] Scenario saving/loading
+- [ ] Basic version control
 
 ### Phase 3: Collaboration
-- Publishing system
-- Copying and modification
-- Comments and voting
+- [ ] Publishing system
+- [ ] Commenting
+- [ ] Voting
+- [ ] Forking scenarios
 
 ### Phase 4: Advanced Features
-- Branching scenarios
-- Aggregation and statistics
-- Advanced visualization options
-
-### Phase 5: Polish & Scale
-- Performance optimization
-- Mobile optimization
-- Advanced analytics
-
-## Technology Stack (To Be Determined)
-
-### Frontend Options
-- React/Vue/Angular for UI framework
-- D3.js or Chart.js for visualizations
-- TypeScript for type safety
-
-### Backend Options
-- Node.js/Python/Go for server
-- PostgreSQL/MongoDB for database
-- Redis for caching
-
-### Infrastructure
-- Cloud hosting (AWS/GCP/Azure)
-- CDN for static assets
-- CI/CD pipeline
+- [ ] Branching scenarios
+- [ ] Aggregation statistics
+- [ ] Advanced visualizations
+- [ ] Export functionality
 
 ## Success Metrics
 - User engagement (scenarios created, published)
@@ -144,19 +149,19 @@ The canonical use case is implementing the Drake equation, where users can speci
 - Scenario quality (completeness, documentation)
 - Performance metrics (load time, calculation speed)
 
-## Constraints & Considerations
-- **Privacy**: User data protection and GDPR compliance
-- **Performance**: Handle complex calculations efficiently
-- **Scalability**: Design for growth in users and data
-- **Accessibility**: WCAG compliance for all users
-- **Security**: Protect against common web vulnerabilities
+## Contributing
 
-## Next Steps
-1. Define detailed technical architecture
-2. Create wireframes and mockups
-3. Set up development environment
-4. Implement Phase 1 core functionality
-5. Establish testing framework
+We welcome contributions! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
+
+## License
+
+[License information to be added]
 
 ---
 
