@@ -1,16 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { DistributionInput } from "@/components/distribution-input";
+import { DistributionInput, type Distribution } from "@/components/distribution-input";
 import { DistributionChart } from "@/components/distribution-chart";
 import { Button } from "@/components/ui/button";
 
 export default function CalculatorPage() {
-  const [distributions, setDistributions] = useState<Array<{
-    name: string;
-    type: "normal" | "uniform" | "exponential";
-    params: Record<string, number>;
-  }>>([
+  const [distributions, setDistributions] = useState<Distribution[]>([
     {
       name: "Component 1",
       type: "normal",
@@ -29,7 +25,7 @@ export default function CalculatorPage() {
     ]);
   };
 
-  const updateDistribution = (index: number, updates: any) => {
+  const updateDistribution = (index: number, updates: Partial<Distribution>) => {
     const newDistributions = [...distributions];
     newDistributions[index] = { ...newDistributions[index], ...updates };
     setDistributions(newDistributions);
