@@ -11,13 +11,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Trash2, ChevronDown } from "lucide-react";
 
+export interface Distribution {
+  name: string;
+  type: "normal" | "uniform" | "exponential";
+  params: Record<string, number>;
+}
+
 interface DistributionInputProps {
-  distribution: {
-    name: string;
-    type: "normal" | "uniform" | "exponential";
-    params: Record<string, number>;
-  };
-  onChange: (updates: any) => void;
+  distribution: Distribution;
+  onChange: (updates: Partial<Distribution>) => void;
   onRemove: () => void;
   canRemove: boolean;
 }
