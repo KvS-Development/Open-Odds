@@ -38,8 +38,8 @@ export function LoginForm({
         password,
       });
       if (error) throw error;
-      // Update this route to redirect to an authenticated route. The user already has an active session.
-      router.push("/protected");
+      // Redirect to dashboard after successful login
+      router.push("/dashboard");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
@@ -53,7 +53,7 @@ export function LoginForm({
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Sign in to save and share your probability scenarios
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -101,6 +101,10 @@ export function LoginForm({
               >
                 Sign up
               </Link>
+            </div>
+            <div className="mt-2 text-center text-xs text-muted-foreground">
+              Note: You can use the calculator without logging in.
+              An account is only needed to save and share scenarios.
             </div>
           </form>
         </CardContent>
