@@ -30,6 +30,11 @@ export function DistributionInput({
   onRemove,
   canRemove
 }: DistributionInputProps) {
+  const parseNumberInput = (value: string, fallback: number) => {
+    const parsed = parseFloat(value);
+    return Number.isNaN(parsed) ? fallback : parsed;
+  };
+
   const renderParamsInputs = () => {
     switch (distribution.type) {
       case "normal":
@@ -41,12 +46,12 @@ export function DistributionInput({
                 <Input
                   id={`mean-${distribution.name}`}
                   type="number"
-                  value={distribution.params.mean || 0}
+                  value={distribution.params.mean ?? 0}
                   onChange={(e) =>
                     onChange({
                       params: {
                         ...distribution.params,
-                        mean: parseFloat(e.target.value) || 0
+                        mean: parseNumberInput(e.target.value, 0)
                       }
                     })
                   }
@@ -58,12 +63,12 @@ export function DistributionInput({
                 <Input
                   id={`stdDev-${distribution.name}`}
                   type="number"
-                  value={distribution.params.stdDev || 1}
+                  value={distribution.params.stdDev ?? 1}
                   onChange={(e) =>
                     onChange({
                       params: {
                         ...distribution.params,
-                        stdDev: parseFloat(e.target.value) || 1
+                        stdDev: parseNumberInput(e.target.value, 1)
                       }
                     })
                   }
@@ -82,12 +87,12 @@ export function DistributionInput({
                 <Input
                   id={`min-${distribution.name}`}
                   type="number"
-                  value={distribution.params.min || 0}
+                  value={distribution.params.min ?? 0}
                   onChange={(e) =>
                     onChange({
                       params: {
                         ...distribution.params,
-                        min: parseFloat(e.target.value) || 0
+                        min: parseNumberInput(e.target.value, 0)
                       }
                     })
                   }
@@ -99,12 +104,12 @@ export function DistributionInput({
                 <Input
                   id={`max-${distribution.name}`}
                   type="number"
-                  value={distribution.params.max || 100}
+                  value={distribution.params.max ?? 100}
                   onChange={(e) =>
                     onChange({
                       params: {
                         ...distribution.params,
-                        max: parseFloat(e.target.value) || 100
+                        max: parseNumberInput(e.target.value, 100)
                       }
                     })
                   }
@@ -122,12 +127,12 @@ export function DistributionInput({
               id={`lambda-${distribution.name}`}
               type="number"
               step="0.01"
-              value={distribution.params.lambda || 1}
+              value={distribution.params.lambda ?? 1}
               onChange={(e) =>
                 onChange({
                   params: {
                     ...distribution.params,
-                    lambda: parseFloat(e.target.value) || 1
+                    lambda: parseNumberInput(e.target.value, 1)
                   }
                 })
               }
