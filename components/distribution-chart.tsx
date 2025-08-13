@@ -55,6 +55,66 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
     return lambda * Math.exp(-lambda * x);
   };
 
+  const getRange = (dist: Distribution) => {
+    switch (dist.type) {
+      case "normal": {
+        const mean = dist.params.mean || 50;
+        const stdDev = dist.params.stdDev || 10;
+        return { min: mean - 4 * stdDev, max: mean + 4 * stdDev };
+      }
+      case "uniform":
+        return { min: dist.params.min || 0, max: dist.params.max || 100 };
+      case "exponential":
+        return { min: 0, max: 5 / (dist.params.lambda || 1) };
+    }
+  };
+
+  const pdfAt = (dist: Distribution, x: number) => {
+    switch (dist.type) {
+      case "normal":
+        return normalPDF(x, dist.params.mean || 50, dist.params.stdDev || 10);
+      case "uniform":
+        return uniformPDF(x, dist.params.min || 0, dist.params.max || 100);
+      case "exponential":
+        return exponentialPDF(x, dist.params.lambda || 1);
+    }
+  };
+
+  const convolve = (a: number[], b: number[], step: number) => {
+    const result = Array(a.length + b.length - 1).fill(0);
+    for (let i = 0; i < a.length; i++) {
+      for (let j = 0; j < b.length; j++) {
+        result[i + j] += a[i] * b[j] * step;
+      }
+    }
+    return result;
+  };
+
+  const computeConvolution = (dists: Distribution[], numPoints = 400) => {
+    if (dists.length === 0) return [] as { x: number; y: number }[];
+
+    const ranges = dists.map(getRange);
+    const totalMin = ranges.reduce((sum, r) => sum + r.min, 0);
+    const totalMax = ranges.reduce((sum, r) => sum + r.max, 0);
+    const step = (totalMax - totalMin) / numPoints;
+
+    const pdfArrays = dists.map((dist, idx) => {
+      const { min, max } = ranges[idx];
+      const length = Math.ceil((max - min) / step) + 1;
+      return Array.from({ length }, (_, i) => pdfAt(dist, min + i * step));
+    });
+
+    let result = pdfArrays[0];
+    for (let i = 1; i < pdfArrays.length; i++) {
+      result = convolve(result, pdfArrays[i], step);
+    }
+
+    const area = result.reduce((sum, y) => sum + y, 0) * step;
+    result = result.map((y) => y / area);
+
+    return result.map((y, i) => ({ x: totalMin + i * step, y }));
+  };
+
   // Generate data points for a distribution
   const generateDistributionData = (dist: Distribution, numPoints = 200) => {
     const points: { x: number; y: number }[] = [];
@@ -131,14 +191,18 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
       };
     });
 
-    // Calculate x range for all distributions
-    let globalXMin = Infinity, globalXMax = -Infinity;
-    datasets.forEach(dataset => {
-      dataset.data.forEach(point => {
-        if (point.x < globalXMin) globalXMin = point.x;
-        if (point.x > globalXMax) globalXMax = point.x;
+    if (distributions.length > 0) {
+      datasets.push({
+        label: "Convolution",
+        data: computeConvolution(distributions),
+        borderColor: "rgba(0,0,0,0.8)",
+        backgroundColor: "rgba(0,0,0,0.1)",
+        fill: true,
+        tension: 0.4,
+        pointRadius: 0,
+        borderWidth: 2,
       });
-    });
+    }
 
     return {
       datasets,
