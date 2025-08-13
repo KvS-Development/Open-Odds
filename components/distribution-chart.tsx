@@ -201,6 +201,7 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
         tension: 0.4,
         pointRadius: 0,
         borderWidth: 2,
+        showLine: true,
       });
     }
 
