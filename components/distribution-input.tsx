@@ -71,6 +71,7 @@ export function DistributionInput({
                   id={`stdDev-${distribution.name}`}
                   type="number"
                   value={distribution.params.stdDev ?? 1}
+                  min="0"
                   onChange={(e) =>
                     onChange({
                       params: {
@@ -95,14 +96,17 @@ export function DistributionInput({
                   id={`min-${distribution.name}`}
                   type="number"
                   value={distribution.params.min ?? 0}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const newMin = parseNumberInput(e.target.value, 0);
+                    const currentMax = distribution.params.max ?? 100;
                     onChange({
                       params: {
                         ...distribution.params,
-                        min: parseNumberInput(e.target.value, 0)
+                        min: newMin,
+                        max: newMin > currentMax ? newMin : currentMax
                       }
-                    })
-                  }
+                    });
+                  }}
                   className="mt-1"
                 />
               </div>
@@ -112,14 +116,17 @@ export function DistributionInput({
                   id={`max-${distribution.name}`}
                   type="number"
                   value={distribution.params.max ?? 100}
-                  onChange={(e) =>
+                  onChange={(e) => {
+                    const newMax = parseNumberInput(e.target.value, 100);
+                    const currentMin = distribution.params.min ?? 0;
                     onChange({
                       params: {
                         ...distribution.params,
-                        max: parseNumberInput(e.target.value, 100)
+                        min: newMax < currentMin ? newMax : currentMin,
+                        max: newMax
                       }
-                    })
-                  }
+                    });
+                  }}
                   className="mt-1"
                 />
               </div>
@@ -134,6 +141,7 @@ export function DistributionInput({
               id={`lambda-${distribution.name}`}
               type="number"
               step="0.01"
+              min="0.0001"
               value={distribution.params.lambda ?? 1}
               onChange={(e) =>
                 onChange({
