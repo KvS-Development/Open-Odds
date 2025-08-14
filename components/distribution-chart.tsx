@@ -12,6 +12,7 @@ import {
   Filler
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import type { Distribution } from "./distribution-input";
 
 // Register ChartJS components
 ChartJS.register(
@@ -24,12 +25,6 @@ ChartJS.register(
   Legend,
   Filler
 );
-
-interface Distribution {
-  name: string;
-  type: "normal" | "uniform" | "exponential";
-  params: Record<string, number>;
-}
 
 interface DistributionChartProps {
   distributions: Distribution[];
@@ -55,6 +50,29 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
     return lambda * Math.exp(-lambda * x);
   };
 
+  // Calculate probability density for linear distribution
+  const linearPDF = (x: number, points: { x: number; y: number }[]) => {
+    if (points.length < 2) return 0;
+    const sorted = [...points].sort((a, b) => a.x - b.x);
+    const area = sorted.reduce((acc, p, i) => {
+      if (i === 0) return 0;
+      const prev = sorted[i - 1];
+      return acc + ((prev.y + p.y) / 2) * (p.x - prev.x);
+    }, 0);
+    if (area === 0) return 0;
+    if (x < sorted[0].x || x > sorted[sorted.length - 1].x) return 0;
+    for (let i = 0; i < sorted.length - 1; i++) {
+      const p1 = sorted[i];
+      const p2 = sorted[i + 1];
+      if (x >= p1.x && x <= p2.x) {
+        const slope = (p2.y - p1.y) / (p2.x - p1.x);
+        const y = p1.y + slope * (x - p1.x);
+        return y / area;
+      }
+    }
+    return 0;
+  };
+
   const getRange = (dist: Distribution) => {
     switch (dist.type) {
       case "normal": {
@@ -71,6 +89,12 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
         const lambda = Math.abs(dist.params.lambda || 1);
         return { min: 0, max: 5 / (lambda || 1) };
       }
+      case "linear": {
+        const pts = dist.params.points || [];
+        if (pts.length === 0) return { min: 0, max: 0 };
+        const sorted = [...pts].sort((a, b) => a.x - b.x);
+        return { min: sorted[0].x, max: sorted[sorted.length - 1].x };
+      }
     }
   };
 
@@ -85,6 +109,8 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
       }
       case "exponential":
         return exponentialPDF(x, Math.abs(dist.params.lambda || 1));
+      case "linear":
+        return linearPDF(x, dist.params.points || []);
     }
   };
 
@@ -151,6 +177,15 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
         xMin = 0;
         xMax = 5 / (dist.params.lambda || 1);
         break;
+      case "linear": {
+        const pts = dist.params.points || [];
+        if (pts.length > 0) {
+          const sorted = [...pts].sort((a, b) => a.x - b.x);
+          xMin = sorted[0].x;
+          xMax = sorted[sorted.length - 1].x;
+        }
+        break;
+      }
     }
 
     const step = (xMax - xMin) / numPoints;
@@ -168,6 +203,9 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
           break;
         case "exponential":
           y = exponentialPDF(x, dist.params.lambda || 1);
+          break;
+        case "linear":
+          y = linearPDF(x, dist.params.points || []);
           break;
       }
 
