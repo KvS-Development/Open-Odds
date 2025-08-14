@@ -59,24 +59,32 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
     switch (dist.type) {
       case "normal": {
         const mean = dist.params.mean || 50;
-        const stdDev = dist.params.stdDev || 10;
+        const stdDev = Math.abs(dist.params.stdDev || 10);
         return { min: mean - 4 * stdDev, max: mean + 4 * stdDev };
       }
-      case "uniform":
-        return { min: dist.params.min || 0, max: dist.params.max || 100 };
-      case "exponential":
-        return { min: 0, max: 5 / (dist.params.lambda || 1) };
+      case "uniform": {
+        const pMin = dist.params.min || 0;
+        const pMax = dist.params.max || 100;
+        return { min: Math.min(pMin, pMax), max: Math.max(pMin, pMax) };
+      }
+      case "exponential": {
+        const lambda = Math.abs(dist.params.lambda || 1);
+        return { min: 0, max: 5 / (lambda || 1) };
+      }
     }
   };
 
   const pdfAt = (dist: Distribution, x: number) => {
     switch (dist.type) {
       case "normal":
-        return normalPDF(x, dist.params.mean || 50, dist.params.stdDev || 10);
-      case "uniform":
-        return uniformPDF(x, dist.params.min || 0, dist.params.max || 100);
+        return normalPDF(x, dist.params.mean || 50, Math.abs(dist.params.stdDev || 10));
+      case "uniform": {
+        const pMin = dist.params.min || 0;
+        const pMax = dist.params.max || 100;
+        return uniformPDF(x, Math.min(pMin, pMax), Math.max(pMin, pMax));
+      }
       case "exponential":
-        return exponentialPDF(x, dist.params.lambda || 1);
+        return exponentialPDF(x, Math.abs(dist.params.lambda || 1));
     }
   };
 
@@ -97,6 +105,8 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
     const totalMin = ranges.reduce((sum, r) => sum + r.min, 0);
     const totalMax = ranges.reduce((sum, r) => sum + r.max, 0);
     const step = (totalMax - totalMin) / numPoints;
+
+    if (step === 0) return [];
 
     const pdfArrays = dists.map((dist, idx) => {
       const { min, max } = ranges[idx];
@@ -191,7 +201,7 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
       };
     });
 
-    if (distributions.length > 0) {
+    if (distributions.length > 1) {
       datasets.push({
         label: "Convolution",
         data: computeConvolution(distributions),
@@ -201,7 +211,6 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
         tension: 0.4,
         pointRadius: 0,
         borderWidth: 2,
-        showLine: true,
       });
     }
 
