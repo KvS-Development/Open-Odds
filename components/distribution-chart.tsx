@@ -88,6 +88,7 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
       case "exponential": {
         const lambda = Math.abs(dist.params.lambda || 1);
         return { min: 0, max: 5 / (lambda || 1) };
+      }
       case "linear": {
         const pts = dist.params.points || [];
         if (pts.length === 0) return { min: 0, max: 0 };
