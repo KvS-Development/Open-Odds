@@ -13,7 +13,7 @@ import { Trash2, ChevronDown } from "lucide-react";
 
 export interface Distribution {
   name: string;
-  type: "normal" | "uniform" | "exponential" | "linear";
+  type: "normal" | "uniform" | "exponential" | "linear" | "dirac";
   params: {
     mean?: number;
     stdDev?: number;
@@ -21,6 +21,7 @@ export interface Distribution {
     max?: number;
     lambda?: number;
     points?: { x: number; y: number }[];
+    location?: number;
   };
 }
 
@@ -148,6 +149,26 @@ export function DistributionInput({
                   params: {
                     ...distribution.params,
                     lambda: parseNumberInput(e.target.value, 1)
+                  }
+                })
+              }
+              className="mt-1"
+            />
+          </div>
+        );
+      case "dirac":
+        return (
+          <div>
+            <Label htmlFor={`location-${distribution.name}`}>Location</Label>
+            <Input
+              id={`location-${distribution.name}`}
+              type="number"
+              value={distribution.params.location ?? 0}
+              onChange={(e) =>
+                onChange({
+                  params: {
+                    ...distribution.params,
+                    location: parseNumberInput(e.target.value, 0)
                   }
                 })
               }
@@ -285,6 +306,9 @@ export function DistributionInput({
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => onChange({ type: "exponential", params: { lambda: 1 } })}>
                 Exponential
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => onChange({ type: "dirac", params: { location: 0 } })}>
+                Dirac Delta
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() =>
