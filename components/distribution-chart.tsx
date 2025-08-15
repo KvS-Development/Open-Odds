@@ -89,6 +89,10 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
         const lambda = Math.abs(dist.params.lambda || 1);
         return { min: 0, max: 5 / (lambda || 1) };
       }
+      case "dirac": {
+        const loc = dist.params.location || 0;
+        return { min: loc, max: loc };
+      }
       case "linear": {
         const pts = dist.params.points || [];
         if (pts.length === 0) return { min: 0, max: 0 };
@@ -111,6 +115,10 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
         return exponentialPDF(x, Math.abs(dist.params.lambda || 1));
       case "linear":
         return linearPDF(x, dist.params.points || []);
+      case "dirac":
+        return 0;
+      default:
+        return 0;
     }
   };
 
@@ -125,16 +133,17 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
   };
 
   const computeConvolution = (dists: Distribution[], numPoints = 400) => {
-    if (dists.length === 0) return [] as { x: number; y: number }[];
+    const filtered = dists.filter((d) => d.type !== "dirac");
+    if (filtered.length === 0) return [] as { x: number; y: number }[];
 
-    const ranges = dists.map(getRange);
+    const ranges = filtered.map(getRange);
     const totalMin = ranges.reduce((sum, r) => sum + r.min, 0);
     const totalMax = ranges.reduce((sum, r) => sum + r.max, 0);
     const step = (totalMax - totalMin) / numPoints;
 
     if (step === 0) return [];
 
-    const pdfArrays = dists.map((dist, idx) => {
+    const pdfArrays = filtered.map((dist, idx) => {
       const { min, max } = ranges[idx];
       const length = Math.ceil((max - min) / step) + 1;
       return Array.from({ length }, (_, i) => pdfAt(dist, min + i * step));
@@ -153,10 +162,19 @@ export function DistributionChart({ distributions }: DistributionChartProps) {
 
   // Generate data points for a distribution
   const generateDistributionData = (dist: Distribution, numPoints = 200) => {
+    if (dist.type === "dirac") {
+      const loc = dist.params.location || 0;
+      return [
+        { x: loc - 1, y: 0 },
+        { x: loc, y: 1 },
+        { x: loc + 1, y: 0 },
+      ];
+    }
+
     const points: { x: number; y: number }[] = [];
-    
+
     let xMin = 0, xMax = 100;
-    
+
     // Determine x range based on distribution type
     switch (dist.type) {
       case "normal":
