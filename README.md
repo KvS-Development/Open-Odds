@@ -158,6 +158,6 @@ The canonical use case is implementing the Drake equation, where users can speci
 4. Implement Phase 1 core functionality
 5. Establish testing framework
 
----
+--
 
 *This document will be updated as the project evolves and requirements are refined.*
